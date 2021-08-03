@@ -13,14 +13,18 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 @Entity(name = "Role")
 @Table(name = "roles")
 public class Role {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@Column(name = "id", updatable = false)
+	@JsonView(Views.External.class)
 	private Long id;
 	@Column(length = 20, nullable = false)
+	@JsonView(Views.External.class)
 	private String name;
 	
 	@ManyToMany(fetch = FetchType.LAZY,
@@ -56,12 +60,6 @@ public class Role {
 		this.name = name;
 	}
 
-	// public Set<User> getUsers() {
-	// 	return users;
-	// }
 
-	// public void setUsers(Set<User> users) {
-	// 	this.users = users;
-	// }
 
 }

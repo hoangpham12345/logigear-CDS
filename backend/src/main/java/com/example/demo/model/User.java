@@ -10,23 +10,30 @@ import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+
 @Entity(name = "User")
-@Table(name = "users", uniqueConstraints = { @UniqueConstraint(name = "username_unique", columnNames = "username") })
+@Table(name = "users", uniqueConstraints = { @UniqueConstraint(name = "email_unique", columnNames = "email"), @UniqueConstraint(name = "username_unique", columnNames = "username")})
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", updatable = false)
+    @JsonView(Views.External.class)
     private Long id;
 
-    @Column(length = 20, nullable = false)
+    @Column(length = 50, nullable = false)
+    @JsonView(Views.External.class)
     private String username;
 
-    @Column(length = 21, nullable = false)
-    @Size(min = 8, max = 21)
+    @Column(length = 20, nullable = false)
+    @Size(min = 8, max = 20)
+    @JsonView(Views.Internal.class)
     private String password;
 
     @Column(length = 50, nullable = false)
+    @JsonView(Views.External.class)
     private String email;
     
     @ManyToMany(fetch = FetchType.LAZY,
@@ -37,18 +44,25 @@ public class User {
     @JoinTable(name = "users_roles",
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "role_id") })
+    @JsonView(Views.External.class)
     private Set<Role> roles = new HashSet<>();
     
     public User() {
     }
     
-    public User(String username, @Size(min = 8, max = 21) String password, String email) {
+    public User(Long id, String username, String email) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+    }
+    
+    public User(String username, @Size(min = 8, max = 20) String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;
     }
 
-    public User(Long id, String username, @Size(min = 8, max = 21) String password, String email) {
+    public User(Long id, String username, @Size(min = 8, max = 20) String password, String email) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -56,38 +70,39 @@ public class User {
     }
 
     public Long getId() {
-        return id;
-    }
+		return id;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public String getUsername() {
-        return username;
-    }
+	
+	public String getUsername() {
+		return username;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	
+	public String getPassword() {
+		return password;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Set<Role> getRoles() {
+	public Set<Role> getRoles() {
         return roles;
     }
 

@@ -11,10 +11,14 @@ import com.example.demo.model.User;
 public interface UserRepository extends JpaRepository<User, Long> {
   
 	@Query(value = "SELECT * FROM users u WHERE u.username = ?1", nativeQuery = true)
-    Optional<User> findByUsername(String name);
+    User findByUsername(String username);
+    
+    @Query(value = "SELECT * FROM users ", nativeQuery = true)
+    List <User> findAllUsers();
 
-    // @Query(value = "DELETE FROM users WHERE id = ?1", nativeQuery = true)
-    // User deleteUserById(Long id);
+    @Query(value = "DELETE FROM users WHERE id = ?1", nativeQuery = true)
+    User deleteUserById(Long id);
 
     List<User> findByUsernameContaining(String username);
+    
 }
