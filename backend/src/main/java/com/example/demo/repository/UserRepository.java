@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import com.example.demo.model.User;
 
@@ -21,4 +22,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findByUsernameContaining(String username);
     
+    @Query("FROM User WHERE email = :email")
+    List<User> findByEmail(String email);
+
+    @Query("FROM User WHERE token = :token")
+    List<User> findByToken(UUID token);
 }

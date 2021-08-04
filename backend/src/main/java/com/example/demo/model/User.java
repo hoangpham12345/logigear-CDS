@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -47,7 +48,18 @@ public class User {
     @JsonView(Views.External.class)
     private Set<Role> roles = new HashSet<>();
     
+    
+
+    @Column
+    @JsonIgnore
+    private UUID token;
+    
     public User() {
+    }
+
+    public User(String username, String password){
+        this.username = username;
+        this.password = password;
     }
     
     public User(Long id, String username, String email) {
@@ -108,6 +120,14 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public UUID getToken() {
+        return token;
+    }
+
+    public void setToken(UUID token) {
+        this.token = token;
     }
 
 }
