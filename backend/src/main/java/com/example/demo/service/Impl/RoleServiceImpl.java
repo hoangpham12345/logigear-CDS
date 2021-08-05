@@ -1,5 +1,6 @@
 package com.example.demo.service.Impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.example.demo.model.Role;
@@ -21,5 +22,25 @@ public class RoleServiceImpl implements RoleService {
       throw new IllegalStateException("Id does not exist.");
     }
     return roleOptional.get();
+  }
+
+  @Override
+  public Role getRolesByName(String name) {
+    List<Role> roles = roleRepository.findRolesByName(name);
+    if(!roles.isEmpty())
+      return roles.get(0);
+    return null;
+  }
+
+  @Override
+  public void addNewRole(Role role) {
+    // TODO Auto-generated method stub
+      roleRepository.save(role);
+  }
+
+  @Override
+  public List<Role> getAllRoles() {
+    // TODO Auto-generated method stub
+    return roleRepository.findAll();
   }
 }

@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.example.demo.model.Role;
@@ -17,5 +18,8 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
 
   @Query(value = "DELETE FROM roles WHERE name = ?1", nativeQuery = true)
   Role deleteRollByName(String name);
+
+  @Query("FROM Role WHERE name = ?1")
+  List<Role> findRolesByName(String name);
 
 }

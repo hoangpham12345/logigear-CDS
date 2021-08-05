@@ -1,8 +1,10 @@
 package com.example.demo.service.Impl;
 
 import java.net.URI;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -15,6 +17,7 @@ import com.example.demo.service.RoleService;
 import com.example.demo.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -31,6 +34,9 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private RoleService roleService;
 
+	@Value("${userRole}")
+	private String userRole;
+
 	@Override
 	public List<User> getAllUsers() {
 		return userRepository.findAllUsers();
@@ -40,7 +46,8 @@ public class UserServiceImpl implements UserService {
 	public void addNewUser(User user) {
 
 		try {
-			Role defaultRole = roleService.getRoleById(2L);
+			Role defaultRole = new Role(userRole);
+			roleService.addNewRole(defaultRole);
 			user.getRoles().add(defaultRole);
 			userRepository.save(user);
 		} catch (Exception e) {
@@ -102,6 +109,15 @@ public class UserServiceImpl implements UserService {
 			throw new ResourceNotFoundException("user not found with id = " + id);
 		}
 		userRepository.deleteById(id);
+	}
+
+	@Override
+	public List<User> getUsersByRoles(String roleName) {
+		Role role = roleService.getRolesByName(roleName);
+		Set<Role> roles = new HashSet<>();
+		roles.add(role);
+		List<User> users = userRepository.findUSerByRole(roles);
+		return users;
 	}
 
 }

@@ -1,8 +1,10 @@
 package com.example.demo.controller;
 
 import java.net.URI;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -19,8 +21,10 @@ import com.example.demo.util.JwtUtil;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,6 +33,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -109,6 +115,25 @@ public class UserController {
 	public ResponseEntity<Object> deleteUser(@PathVariable Long id) {
 		userService.deleteUser(id);
 		return ResponseEntity.status(200).build();
+	}
+
+	@RequestMapping(value = "/user", method = RequestMethod.GET)
+	public List<User> getUsersByRole(@RequestParam(name = "role", required = false, defaultValue = "employee")String role){
+		List<User> users = userService.getUsersByRoles(role);
+		if(users.isEmpty())
+			return null;
+		return users;
+	}
+
+	@GetMapping("/roles")
+	public List<Role> getAllRoles(){
+		return roleService.getAllRoles();
+	}
+
+	@PostMapping("/role")
+	public Role addRole(@RequestBody Role role){
+		roleService.addNewRole(role);
+		return role;
 	}
 
 }
