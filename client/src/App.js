@@ -13,6 +13,7 @@ import {
 import Header from './components/Header';
 import { SwapVertOutlined } from '@material-ui/icons';
 import Signup from './pages/Signup'
+import TaskBar from './components/TaskBar';
 
 function App() {
   return (
@@ -25,7 +26,9 @@ function App() {
           <Route exact path='/signup' component={Signup} />
           <Route exact path='/home' component={Home} />
           <Route exact path='/header' component={Header} />
+          <Route exact path='/taskbar' component={TaskBar} />
           <Route exact path='/:somestring' component={NotFound} />
+          
         </Switch>
       </Router>
 

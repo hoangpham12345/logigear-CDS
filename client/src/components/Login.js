@@ -20,7 +20,9 @@ import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { useValues } from "react-hook-form";
 import { useState, useEffect } from "react";
-import SignupImage from '../assets/images/time_management.png'
+import SignupImage from '../assets/images/time_management.png';
+import axios from 'axios';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,11 +51,45 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-export default function Login() {
+
+
+
+
+
+
+export default function Login(props) {
   const classes = useStyles();
-  const { handleChange, handleSubmit, values, formErrors, formValues, validate, intialValues } = useLogin();
+  const { handleChange, values, formErrors, formValues, validate, intialValues, handleSubmit } = useLogin();
+  
+  
+  const handleLogin = () =>{
+    
+    const data = {
+      username: formValues.username,
+      password: formValues.password
+    };
+
+
+    axios.post('http://localhost:8080/authenticate', data)
+      .then(res => {
+        console.log(res.data)
+        localStorage.setItem('token', res.data)
+        setTimeout(() => {
+          props.history.push('/home')
+        }, 500);
+      })
+      .catch(err =>{
+        console.log(err)
+        alert("Invalid username or password");
+      });
+
+  };
+     
+
+ 
 
   return (
+    
     <Grid container component="main" style={{ maxHeight: '100px' }} className={classes.root}>
       <CssBaseline />
 
@@ -93,13 +129,12 @@ export default function Login() {
               value={formValues.username}
               onChange={handleChange}
               className={formErrors.username && "input-error"}
-
             />
+
             <Grid xs={12} md={4}>
               {formErrors.username && (
                 <span className="error" style={{ color: 'red' }}>{formErrors.username}</span>
               )}
-
             </Grid>
 
 
@@ -135,6 +170,7 @@ export default function Login() {
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={handleLogin}
             >
               Sign In
             </Button>
@@ -145,14 +181,14 @@ export default function Login() {
               </Link>
             </Grid>
 
-        
+
           </form>
 
 
 
         </div>
       </Grid>
-
+    
     </Grid>
   );
 };
