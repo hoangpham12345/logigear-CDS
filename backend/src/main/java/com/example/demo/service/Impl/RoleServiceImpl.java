@@ -25,11 +25,11 @@ public class RoleServiceImpl implements RoleService {
   }
 
   @Override
-  public Role getRolesByName(String name) {
-    List<Role> roles = roleRepository.findRolesByName(name);
-    if(!roles.isEmpty())
-      return roles.get(0);
-    return null;
+  public Role getRoleByName(String name) {
+    Role role = roleRepository.findRoleByName(name);
+    if(role == null)
+      return null;
+    return role;
   }
 
   @Override

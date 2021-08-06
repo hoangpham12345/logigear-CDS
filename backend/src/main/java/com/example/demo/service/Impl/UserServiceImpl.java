@@ -34,8 +34,7 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private RoleService roleService;
 
-	@Value("${userRole}")
-	private String userRole;
+	private String userRole = "employee";
 
 	@Override
 	public List<User> getAllUsers() {
@@ -44,10 +43,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void addNewUser(User user) {
-
 		try {
-			Role defaultRole = new Role(userRole);
-			roleService.addNewRole(defaultRole);
+			Role defaultRole = roleService.getRoleByName(userRole);
+			userRepository.save(user);
 			user.getRoles().add(defaultRole);
 			userRepository.save(user);
 		} catch (Exception e) {
@@ -113,7 +111,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<User> getUsersByRoles(String roleName) {
-		Role role = roleService.getRolesByName(roleName);
+		Role role = roleService.getRoleByName(roleName);
 		Set<Role> roles = new HashSet<>();
 		roles.add(role);
 		List<User> users = userRepository.findUSerByRole(roles);

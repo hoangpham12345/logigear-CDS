@@ -9,7 +9,7 @@ public interface RoleService {
 
   public Role getRoleById(Long id);
 
-  public Role getRolesByName(String name);
+  public Role getRoleByName(String name);
 
   public void addNewRole(Role role);
 }

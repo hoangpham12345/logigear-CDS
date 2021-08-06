@@ -20,6 +20,6 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
   Role deleteRollByName(String name);
 
   @Query("FROM Role WHERE name = ?1")
-  List<Role> findRolesByName(String name);
+  Role findRoleByName(String name);
 
 }
