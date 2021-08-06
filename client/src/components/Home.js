@@ -68,7 +68,6 @@ class Home extends React.Component {
 
     axios.get('http://localhost:8080/users', config).then(
       res => {
-
         this.setState({
           users: res.data
         });
@@ -77,9 +76,6 @@ class Home extends React.Component {
         console.log(err)
       }
     )
-
-
-
   }
 
   LoginCheckStatus() {

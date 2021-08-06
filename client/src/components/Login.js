@@ -74,13 +74,18 @@ export default function Login(props) {
       .then(res => {
         console.log(res.data)
         localStorage.setItem('token', res.data)
-        setTimeout(() => {
-          props.history.push('/home')
-        }, 500);
-      })
+        // setTimeout(() => {
+        //   props.history.push('/home')
+        // }, 500);
+      }).then (() => {props.history.push('/home')})
       .catch(err =>{
         console.log(err)
-        alert("Invalid username or password");
+          if(formValues.username.length== 0 || formValues.password.length == 0){
+            return "";
+          }
+          else {
+            alert("Invalid username or password");
+          }
       });
 
   };
