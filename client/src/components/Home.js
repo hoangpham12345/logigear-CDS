@@ -49,24 +49,26 @@ class Home extends React.Component {
     this.setState({ anchorEl: null });
   };
 
-   constructor(props) {
-     super(props)
-   }
-   handleLogout = () => {
-     this.setState({ anchorEl: null });
-     localStorage.clear();
-     this.props.history.push('/');
-   };
+  constructor(props) {
+    super(props)
+  }
+  
+  handleLogout = () => {
+    this.setState({ anchorEl: null });
+    localStorage.clear();
+  };
 
   componentDidMount() {
     const config = {
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token')
+
       }
-    };
+    }; 
 
     axios.get('http://localhost:8080/users', config).then(
       res => {
+
         this.setState({
           users: res.data
         });
@@ -76,6 +78,35 @@ class Home extends React.Component {
       }
     )
 
+
+
+  }
+
+  LoginCheckStatus() {
+    if (this.state.users) {
+      return 'You are logged '
+    }
+    else {
+      return 'You are not logged '
+    }
+  }
+
+  LoginCheckButton(){
+    if (this.state.users){
+      return 'logout'
+    }
+    else {
+      return 'login'
+    }
+  }
+
+  loginCheckHref(){
+    if (this.state.users){
+      return '/'
+    }
+    else {
+      return '/login'
+    }
   }
 
   render() {
@@ -83,99 +114,50 @@ class Home extends React.Component {
     const { auth, anchorEl } = this.state;
     const open = Boolean(anchorEl);
 
-    if (this.state.users) {
-      return (
-        <div className={classes.root}>
 
-<AppBar position="static">
-            <Toolbar>
-              <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-                <MenuIcon />
-              </IconButton>
-              <Typography variant="h6" color="inherit" className={classes.grow}>
-                Home Page
-              </Typography>
-              {auth && (
-                <div>
-                  <IconButton
-                    aria-owns={open ? 'menu-appbar' : undefined}
-                    aria-haspopup="true"
-                    onClick={this.handleMenu}
-                    color="inherit"
-                  >
-                    <AccountCircle />
-                  </IconButton>
-                  <Menu
-                    id="menu-appbar"
-                    anchorEl={anchorEl}
-                    anchorOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    open={open}
-                    onClose={this.handleClose}
-                  >
-                    <MenuItem onClick={this.handleClose}>My account</MenuItem>
-                    <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
-                  </Menu>
-                </div>
-              )}
-            </Toolbar>
-          </AppBar>
-
-          <Grid item xs={12} md={12} className="App" style={{ fontSize: '50px' }}>
-            You are logged 
-          </Grid>
-        </div>
-      )
-    }
 
     return (
       <div className={classes.root}>
         <AppBar position="static">
-            <Toolbar>
-              <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-                <MenuIcon />
-              </IconButton>
-              <Typography variant="h6" color="inherit" className={classes.grow}>
-                Home Page
-              </Typography>
-              {auth && (
-                <div>
-                  <IconButton
-                    aria-owns={open ? 'menu-appbar' : undefined}
-                    aria-haspopup="true"
-                    onClick={this.handleMenu}
-                    color="inherit"
-                  >
-                    <AccountCircle />
-                  </IconButton>
-                  <Menu
-                    id="menu-appbar"
-                    anchorEl={anchorEl}
-                    anchorOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    open={open}
-                    onClose={this.handleClose}
-                  >
-                    <Button href="/login" color="inherit">Login</Button>
-                  </Menu>
-                </div>
-              )}
-            </Toolbar>
-          </AppBar>
+          <Toolbar>
+            <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" color="inherit" className={classes.grow}>
+              Home Page
+            </Typography>
+            {auth && (
+              <div>
+                <IconButton
+                  aria-owns={open ? 'menu-appbar' : undefined}
+                  aria-haspopup="true"
+                  onClick={this.handleMenu}
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={open}
+                  onClose={this.handleClose}
+                >
+                  <Button href={this.loginCheckHref()} color="inherit" onClick={this.handleLogout}>{this.LoginCheckButton()}</Button>
+                </Menu>
+              </div>
+            )}
+          </Toolbar>
+        </AppBar>
         <Grid item xs={12} md={12} className="App" style={{ fontSize: '50px' }}>
-          You are not logged
+          {this.LoginCheckStatus()}
         </Grid>
       </div>
     );

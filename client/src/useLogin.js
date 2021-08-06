@@ -26,21 +26,7 @@ const useLogin = (props) => {
     setFormErrors(validate(formValues));
     setIsSubmitting(true);
     
-    
-    // const data = {
-    //   username: formValues.username,
-    //   password: formValues.password
-    // };
-
-
-    // axios.post('http://localhost:8080/authenticate', data)
-    //   .then(res => {
-    //     console.log(res.data)
-    //     localStorage.setItem('token', res.data)
-    //   })
-    //   .catch(err =>{
-    //     console.log(err)
-    //   })
+  
   };
 
   const validate = (values) => {
