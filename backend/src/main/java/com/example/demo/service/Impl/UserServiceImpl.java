@@ -57,12 +57,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		try {
-			if (user.getEmail().length() == 0) {
-				throw new EntityNotFoundException();
-			} else if (user.getUsername().length() == 0) {
-				throw new EntityNotFoundException();
-			}
-
+			NullUserUpdateCheck(user);
 			User updatedUser = userOptional.get();
 			updatedUser.setEmail(user.getEmail());
 			updatedUser.setUsername(user.getUsername());
@@ -73,6 +68,14 @@ public class UserServiceImpl implements UserService {
 			throw new WrongBodyException("wrong body");
 		}
 
+	}
+
+	private void NullUserUpdateCheck(User user) {
+		if (user.getEmail().length() == 0) {
+			throw new EntityNotFoundException();
+		} else if (user.getUsername().length() == 0) {
+			throw new EntityNotFoundException();
+		}
 	}
 	
 
