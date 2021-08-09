@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
@@ -15,14 +16,19 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.service.RoleService;
 import com.example.demo.service.UserService;
 import com.example.demo.model.AuthRequest;
+import com.example.demo.model.AuthResponse;
 import com.example.demo.util.JwtUtil;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,6 +59,12 @@ public class UserController {
 
 	@Autowired
 	private UserRepository userRepo;
+
+	@Autowired
+	private ObjectMapper mapper;
+
+	@Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@GetMapping("/users")
 	@JsonView(Views.External.class)
@@ -88,19 +100,6 @@ public class UserController {
 		return ResponseEntity.accepted().build();
 		
 	}
-
-	@PostMapping("/authenticate")
-	public String generateToken(@RequestBody AuthRequest authrequest) throws Exception {
-		try {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authrequest.getUsername(), authrequest.getPassword()));
-		}
-		catch (Exception e) {
-			throw new Exception("Invalid username and password");
-		}
-		
-		return  jwtUtil.generateToken(authrequest.getUsername());
-	
-	}
 	
 	@PutMapping("/users/{id}")
 	public ResponseEntity<Object> updateUser(@RequestBody User user, @PathVariable("id") Long id) {
@@ -116,4 +115,73 @@ public class UserController {
 		return ResponseEntity.status(200).build();
 	}
 
+	@PostMapping("/auth/login")
+	// public String generateToken(@RequestBody AuthRequest authrequest) throws Exception {
+	// 	try {
+	// 		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authrequest.getUsername(), authrequest.getPassword()));
+	// 	}
+	// 	catch (Exception e) {
+	// 		throw new Exception("Invalid username and password");
+	// 	}
+		
+	// 	return  jwtUtil.generateToken(authrequest.getUsername());
+	
+	// }
+	public ResponseEntity<?> login(@RequestBody Map<String, Object> payload){
+        String username = null;
+        String password = null;
+        try {
+            username = payload.get("username").toString();
+            password = payload.get("password").toString();
+        }catch(Exception e){
+            return new ResponseEntity<>(new Exception("Missing value field !")
+                    , HttpStatus.FORBIDDEN);
+        }
+        User user = new User(username, password);
+        return createAuthenticationToken(user);
+    }
+
+	private ResponseEntity<?> createAuthenticationToken(User user) {
+        try{
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
+            );
+        } catch (BadCredentialsException e) {
+            return new ResponseEntity<>("Incorrect username or password"
+                    , HttpStatus.FORBIDDEN);
+        }
+
+        final String jwt = jwtUtil.generateToken(user.getUsername());
+
+        return new ResponseEntity<>(new AuthResponse(jwt), HttpStatus.OK);
+    }
+
+	@PostMapping("/auth/signup")
+    public ResponseEntity<?> register(@RequestBody Map<String, Object> payload) throws Exception {
+        String email = null;
+        String username = null;
+        String password = null;
+        try {
+            email = payload.get("email").toString();
+            password = payload.get("password").toString();
+			password = bCryptPasswordEncoder.encode(password);
+            username = payload.get("username").toString();
+        } catch(Exception e){
+            return new ResponseEntity<>(new Exception("Missing value field !")
+                    , HttpStatus.FORBIDDEN);
+        }
+        if(!userRepo.findByEmail(email).isEmpty()) return new ResponseEntity<>(new Exception(
+            "There is already an account with the email address: " + email), HttpStatus.FORBIDDEN); 
+        User user = new User(username, password, email);
+        try{
+            userService.addNewUser(user);
+        }catch(Exception e){
+            return new ResponseEntity<>(new Exception("Couldn't save to database"),HttpStatus.FORBIDDEN);
+        }
+            ObjectNode objectNode = mapper.createObjectNode();
+            objectNode.put("status", true);
+            objectNode.put("message", "Account creation successful");
+
+            return new ResponseEntity<>(objectNode, HttpStatus.OK);
+    }
 }
