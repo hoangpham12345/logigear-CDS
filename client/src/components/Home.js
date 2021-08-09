@@ -52,10 +52,10 @@ class Home extends React.Component {
   constructor(props) {
     super(props);
   }
-
   handleLogout = () => {
     this.setState({ anchorEl: null });
     localStorage.clear();
+    this.props.history.push("/");
   };
 
   componentDidMount() {
@@ -76,31 +76,13 @@ class Home extends React.Component {
       }
     );
   }
-
-  LoginCheckStatus() {
+  ken() {
     if (this.state.users) {
       return "You are logged ";
     } else {
       return "You are not logged ";
     }
   }
-
-  LoginCheckButton() {
-    if (this.state.users) {
-      return "logout";
-    } else {
-      return "login";
-    }
-  }
-
-  loginCheckHref() {
-    if (this.state.users) {
-      return "/";
-    } else {
-      return "/login";
-    }
-  }
-
   render() {
     const { classes } = this.props;
     const { auth, anchorEl } = this.state;
@@ -144,26 +126,69 @@ class Home extends React.Component {
                   open={open}
                   onClose={this.handleClose}
                 >
-                  <Button
-                    href={this.loginCheckHref()}
-                    color='inherit'
-                    onClick={this.handleLogout}
-                  >
-                    {this.LoginCheckButton()}
-                  </Button>
+                  <MenuItem onClick={this.handleClose}>My account</MenuItem>
+                  <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
                 </Menu>
               </div>
             )}
           </Toolbar>
         </AppBar>
+
         <Grid item xs={12} md={12} className='App' style={{ fontSize: "50px" }}>
-          {this.LoginCheckStatus()}
+          {this.ken()}
         </Grid>
       </div>
     );
   }
-}
 
+  //     return (
+  //       <div className={classes.root}>
+  //         <AppBar position="static">
+  //             <Toolbar>
+  //               <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+  //                 <MenuIcon />
+  //               </IconButton>
+  //               <Typography variant="h6" color="inherit" className={classes.grow}>
+  //                 Home Page
+  //               </Typography>
+  //               {auth && (
+  //                 <div>
+  //                   <IconButton
+  //                     aria-owns={open ? 'menu-appbar' : undefined}
+  //                     aria-haspopup="true"
+  //                     onClick={this.handleMenu}
+  //                     color="inherit"
+  //                   >
+  //                     <AccountCircle />
+  //                   </IconButton>
+  //                   <Menu
+  //                     id="menu-appbar"
+  //                     anchorEl={anchorEl}
+  //                     anchorOrigin={{
+  //                       vertical: 'top',
+  //                       horizontal: 'right',
+  //                     }}
+  //                     transformOrigin={{
+  //                       vertical: 'top',
+  //                       horizontal: 'right',
+  //                     }}
+  //                     open={open}
+  //                     onClose={this.handleClose}
+  //                   >
+  //                     <Button href="/login" color="inherit">Login</Button>
+  //                   </Menu>
+  //                 </div>
+  //               )}
+  //             </Toolbar>
+  //           </AppBar>
+  //         <Grid item xs={12} md={12} className="App" style={{ fontSize: '50px' }}>
+  //           You are not logged
+  //         </Grid>
+  //       </div>
+  //     );
+  //   }
+  // }
+}
 Home.propTypes = {
   classes: PropTypes.object.isRequired,
 };

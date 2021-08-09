@@ -4,16 +4,12 @@ import Welcome from "./components/Welcome";
 import Home from "./components/Home";
 import "./App.css";
 import NotFound from "./components/NotFound";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  Redirect,
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Header from "./components/Header";
+import { SwapVertOutlined } from "@material-ui/icons";
 import Signup from "./pages/Signup";
-import EmployeeList from "./pages/EmployeeList";
+import TaskBar from "./components/TaskBar";
+import LoginNew from "./pages/LoginNew";
 
 function App() {
   const authenticated = true;

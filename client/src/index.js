@@ -3,12 +3,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import axios from 'axios';
-
-
-axios.defaults.headers.get['Accepts'] = 'application/json';
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
-axios.defaults.headers.common['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept';
 
 ReactDOM.render(
   <React.StrictMode>

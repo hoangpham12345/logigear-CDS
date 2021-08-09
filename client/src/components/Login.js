@@ -59,34 +59,23 @@ export default function Login(props) {
     handleSubmit,
   } = useLogin();
 
-  const handleLogin = () => {
+  const handleLogin = (e) => {
+    e.preventDefault();
     const data = {
       username: formValues.username,
       password: formValues.password,
     };
 
     axios
-      .post("http://localhost:8080/authenticate", data)
+      .post("http://localhost:8080/auth/login", data)
       .then((res) => {
         console.log(res.data);
-        localStorage.setItem("token", res.data);
-        // setTimeout(() => {
-        //   props.history.push('/home')
-        // }, 500);
+        localStorage.setItem("token", res.data.jwtToken);
       })
-      .then(() => {
-        props.history.push("/home");
-      })
+      .then(props.history.push("/home"))
       .catch((err) => {
         console.log(err);
-        if (
-          formValues.username.length == 0 ||
-          formValues.password.length == 0
-        ) {
-          return "";
-        } else {
-          alert("Invalid username or password");
-        }
+        alert("Invalid username or password");
       });
   };
 
