@@ -130,6 +130,7 @@ public class UserController {
 	public ResponseEntity<?> login(@RequestBody Map<String, Object> payload){
         String username = null;
         String password = null;
+		User user = null;
         try {
             username = payload.get("username").toString();
             password = payload.get("password").toString();
@@ -137,7 +138,8 @@ public class UserController {
             return new ResponseEntity<>(new Exception("Missing value field !")
                     , HttpStatus.FORBIDDEN);
         }
-        User user = new User(username, password);
+		user = new User(username, password);
+		// System.out.println(user.getUsername());
         return createAuthenticationToken(user);
     }
 
@@ -150,10 +152,16 @@ public class UserController {
             return new ResponseEntity<>("Incorrect username or password"
                     , HttpStatus.FORBIDDEN);
         }
-
+		String password = user.getPassword();
+		try {
+			user = userService.getUserWithNameAndPass(user.getUsername(), user.getPassword());
+		}catch(Exception e){
+			return new ResponseEntity<>(new Exception("Unable to find user account in the database !")
+                    , HttpStatus.FORBIDDEN);
+		}
         final String jwt = jwtUtil.generateToken(user.getUsername());
 
-        return new ResponseEntity<>(new AuthResponse(jwt), HttpStatus.OK);
+        return new ResponseEntity<>(new AuthResponse(user.getId(), user.getUsername(), jwt), HttpStatus.OK);
     }
 
 	@PostMapping("/auth/signup")
@@ -174,7 +182,7 @@ public class UserController {
             "There is already an account with the email address: " + email), HttpStatus.FORBIDDEN); 
         User user = new User(username, password, email);
         try{
-            userRepo.save(user);
+            userService.addNewUser(user);
         }catch(Exception e){
             return new ResponseEntity<>(new Exception("Couldn't save to database"),HttpStatus.FORBIDDEN);
         }

@@ -4,4 +4,8 @@ import com.example.demo.model.Role;
 
 public interface RoleService {
   public Role getRoleById(Long id);
+
+  public Role addRole(String name);
+
+  public Role getRoleByName(String name);
 }

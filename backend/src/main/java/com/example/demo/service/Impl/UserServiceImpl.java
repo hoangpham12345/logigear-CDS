@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
 	public void addNewUser(User user) {
 
 		try {
-			Role defaultRole = roleService.getRoleById(2L);
+			Role defaultRole = roleService.getRoleByName("employee");
 			user.getRoles().add(defaultRole);
 			userRepository.save(user);
 		} catch (Exception e) {
@@ -105,6 +105,14 @@ public class UserServiceImpl implements UserService {
 			throw new ResourceNotFoundException("user not found with id = " + id);
 		}
 		userRepository.deleteById(id);
+	}
+
+	@Override
+	public User getUserWithNameAndPass(String username, String password) {
+		// TODO Auto-generated method stub
+		User user = userRepository.findByUsername(username);
+		user = userRepository.findByUsernameAndPassword(username, user.getPassword());
+		return user;
 	}
 
 }

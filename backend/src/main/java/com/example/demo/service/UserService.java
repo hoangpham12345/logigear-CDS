@@ -18,6 +18,8 @@ public interface UserService {
 
 	public List<User> getUsersWithUsernameLike(String username);
 
+    public User getUserWithNameAndPass(String username, String password);
+
     @Modifying
     public void deleteUser(Long id);
 }
