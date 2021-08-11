@@ -26,8 +26,9 @@ const useStyles = makeStyles({
     display: "block",
   },
   inputText: {
+    boxSizing: "border-box",
     padding: "1vh 1vw",
-    width: "calc(100% - 2vw)",
+    width: "100%",
     margin: "0 auto",
     border: "1px solid lightgray",
     fontSize: "15px",

@@ -1,7 +1,9 @@
 import React from "react";
 import { DataGrid, GridToolbar } from "@material-ui/data-grid";
-import axios from "axios";
-import { API_URL } from "../constants";
+// import axios from "axios";
+
+import * as AxiosService from "../utils/services/AxiosService";
+// import { API_URL } from "../constants";
 // import { data } from "../data";
 
 const columns = [
@@ -45,12 +47,13 @@ const EmployeeDataGrid = () => {
 
   React.useEffect(() => {
     let users = [];
-    axios
-      .get(`${API_URL}/users`, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-      })
+    // axios
+    //   .get(`${API_URL}/users`, {
+    //     headers: {
+    //       Authorization: "Bearer " + localStorage.getItem("token"),
+    //     },
+    //   })
+    AxiosService.getEmployees()
       .then((response) => response.data)
       .then((data) => {
         data.forEach((obj) => {
