@@ -38,6 +38,10 @@ public class Role {
 	public Role() {
 		super();
 	}
+
+	public Role(String name){
+		this.name = name;
+	}
 	
 	public Role(Long id, String name) {
 		this.id = id;

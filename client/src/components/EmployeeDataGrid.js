@@ -21,16 +21,16 @@ const columns = [
     editable: true,
   },
   {
-    field: "user",
-    headerName: "isUser",
+    field: "employee",
+    headerName: "isEmployee",
     flex: 0.75,
     type: "boolean",
     minWidth: 110,
     editable: false,
   },
   {
-    field: "admin",
-    headerName: "isAdmin",
+    field: "manager",
+    headerName: "isManager",
     flex: 0.8,
     type: "boolean",
     minWidth: 110,
@@ -60,14 +60,14 @@ const EmployeeDataGrid = () => {
             id: obj.id,
             name: obj.username,
             email: obj.email,
-            user: roles.includes("user") ? true : false,
-            admin: roles.includes("admin") ? true : false,
+            employee: roles.includes("employee") ? true : false,
+            manager: roles.includes("manager") ? true : false,
           };
           users.push(user);
         });
       })
       .then(() => {
-        setData(users);
+        setData(users); 
       })
       .catch((error) => console.log(error));
   }, []);

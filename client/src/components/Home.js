@@ -10,13 +10,14 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 // import Switch from '@material-ui/core/Switch';
 // import FormControlLabel from '@material-ui/core/FormControlLabel';
 // import FormGroup from '@material-ui/core/FormGroup';
-// import MenuItem from '@material-ui/core/MenuItem';
+import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
-import axios from "axios";
 import Grid from "@material-ui/core/Grid";
 // import { Route, Router } from 'react-router';
 // import TaskBar from './TaskBar'
 import Button from "@material-ui/core/Button";
+import * as AxiosService from "../utils/services/AxiosService";
+//import { MenuItem } from "@material-ui/core";
 
 const styles = {
   root: {
@@ -52,37 +53,42 @@ class Home extends React.Component {
   constructor(props) {
     super(props);
   }
+
   handleLogout = () => {
     this.setState({ anchorEl: null });
     localStorage.clear();
-    this.props.history.push("/");
   };
 
   componentDidMount() {
-    const config = {
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-    };
-
-    axios.get("http://localhost:8080/users", config).then(
-      (res) => {
-        this.setState({
-          users: res.data,
-        });
-      },
-      (err) => {
-        console.log(err);
-      }
-    );
+    this.setState({
+      user: localStorage.getItem("username"),
+    });
   }
-  ken() {
-    if (this.state.users) {
-      return "You are logged ";
+
+  LoginCheckStatus() {
+    if (this.state.user) {
+      return "Hello " + localStorage.getItem("username");
     } else {
       return "You are not logged ";
     }
   }
+
+  LoginCheckButton() {
+    if (this.state.user) {
+      return "logout";
+    } else {
+      return "login";
+    }
+  }
+
+  loginCheckHref() {
+    if (this.state.user) {
+      return "/";
+    } else {
+      return "/login";
+    }
+  }
+
   render() {
     const { classes } = this.props;
     const { auth, anchorEl } = this.state;
@@ -90,30 +96,30 @@ class Home extends React.Component {
 
     return (
       <div className={classes.root}>
-        <AppBar position='static'>
+        <AppBar position="static">
           <Toolbar>
             <IconButton
               className={classes.menuButton}
-              color='inherit'
-              aria-label='Menu'
+              color="inherit"
+              aria-label="Menu"
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant='h6' color='inherit' className={classes.grow}>
+            <Typography variant="h6" color="inherit" className={classes.grow}>
               Home Page
             </Typography>
             {auth && (
               <div>
                 <IconButton
                   aria-owns={open ? "menu-appbar" : undefined}
-                  aria-haspopup='true'
+                  aria-haspopup="true"
                   onClick={this.handleMenu}
-                  color='inherit'
+                  color="inherit"
                 >
                   <AccountCircle />
                 </IconButton>
                 <Menu
-                  id='menu-appbar'
+                  id="menu-appbar"
                   anchorEl={anchorEl}
                   anchorOrigin={{
                     vertical: "top",
@@ -126,69 +132,33 @@ class Home extends React.Component {
                   open={open}
                   onClose={this.handleClose}
                 >
-                  <MenuItem onClick={this.handleClose}>My account</MenuItem>
-                  <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
+                  <MenuItem>
+                    <Button
+                      href={this.loginCheckHref()}
+                      color="inherit"
+                      onClick={this.handleLogout}
+                    >
+                      {this.LoginCheckButton()}
+                    </Button>
+                  </MenuItem>
+                  <MenuItem>
+                    <Button href="/employees" color="inherit">
+                      Employees List
+                    </Button>
+                  </MenuItem>
                 </Menu>
               </div>
             )}
           </Toolbar>
         </AppBar>
-
-        <Grid item xs={12} md={12} className='App' style={{ fontSize: "50px" }}>
-          {this.ken()}
+        <Grid item xs={12} md={12} className="App" style={{ fontSize: "50px" }}>
+          {this.LoginCheckStatus()}
         </Grid>
       </div>
     );
   }
-
-  //     return (
-  //       <div className={classes.root}>
-  //         <AppBar position="static">
-  //             <Toolbar>
-  //               <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-  //                 <MenuIcon />
-  //               </IconButton>
-  //               <Typography variant="h6" color="inherit" className={classes.grow}>
-  //                 Home Page
-  //               </Typography>
-  //               {auth && (
-  //                 <div>
-  //                   <IconButton
-  //                     aria-owns={open ? 'menu-appbar' : undefined}
-  //                     aria-haspopup="true"
-  //                     onClick={this.handleMenu}
-  //                     color="inherit"
-  //                   >
-  //                     <AccountCircle />
-  //                   </IconButton>
-  //                   <Menu
-  //                     id="menu-appbar"
-  //                     anchorEl={anchorEl}
-  //                     anchorOrigin={{
-  //                       vertical: 'top',
-  //                       horizontal: 'right',
-  //                     }}
-  //                     transformOrigin={{
-  //                       vertical: 'top',
-  //                       horizontal: 'right',
-  //                     }}
-  //                     open={open}
-  //                     onClose={this.handleClose}
-  //                   >
-  //                     <Button href="/login" color="inherit">Login</Button>
-  //                   </Menu>
-  //                 </div>
-  //               )}
-  //             </Toolbar>
-  //           </AppBar>
-  //         <Grid item xs={12} md={12} className="App" style={{ fontSize: '50px' }}>
-  //           You are not logged
-  //         </Grid>
-  //       </div>
-  //     );
-  //   }
-  // }
 }
+
 Home.propTypes = {
   classes: PropTypes.object.isRequired,
 };

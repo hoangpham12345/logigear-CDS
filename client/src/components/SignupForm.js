@@ -91,9 +91,9 @@ const SignupForm = ({ handleOpen }) => {
   return (
     <form className={classes.signupForm} onSubmit={handleSubmit(onSubmit)}>
       <div className={classes.divField}>
-        <label className={classes.labelText}>Full Name*</label>
+        <label className={classes.labelText}>Username*</label>
         <input
-          placeholder='Full Name'
+          placeholder="Username"
           className={classes.inputText}
           {...register("fullname")}
         />
@@ -102,7 +102,7 @@ const SignupForm = ({ handleOpen }) => {
       <div className={classes.divField}>
         <label className={classes.labelText}>Email*</label>
         <input
-          placeholder='Email'
+          placeholder="Email"
           className={classes.inputText}
           {...register("email")}
         />
@@ -111,8 +111,8 @@ const SignupForm = ({ handleOpen }) => {
       <div className={classes.divField}>
         <label className={classes.labelText}>Password*</label>
         <input
-          type='password'
-          placeholder='Password'
+          type="password"
+          placeholder="Password"
           className={classes.inputText}
           {...register("password")}
         />
@@ -121,8 +121,8 @@ const SignupForm = ({ handleOpen }) => {
       <div className={classes.divField}>
         <label className={classes.labelText}>Confirm password*</label>
         <input
-          type='password'
-          placeholder='Confirm Password'
+          type="password"
+          placeholder="Confirm Password"
           className={classes.inputText}
           {...register("confirmPassword")}
         />
@@ -131,17 +131,17 @@ const SignupForm = ({ handleOpen }) => {
       <FormControlLabel
         control={
           <Controller
-            name='acceptTerm'
+            name="acceptTerm"
             control={control}
             defaultValue={false}
-            render={({ field }) => <Checkbox {...field} color='primary' />}
+            render={({ field }) => <Checkbox {...field} color="primary" />}
           />
         }
         label={
           // <span>I agree to the MOWEDE <Link component={RouterLink} to="term" target="_blank" rel="noopener noreferrer">Terms</Link></span>
           <span>
             I agree to the MOWEDE{" "}
-            <Link component='span' variant='body1' onClick={handleOpen}>
+            <Link component="span" variant="body1" onClick={handleOpen}>
               Terms
             </Link>
           </span>
@@ -149,7 +149,7 @@ const SignupForm = ({ handleOpen }) => {
       />
       {/* We will use React modal to display the Terms later */}
       <p className={classes.errorText}>{errors.acceptTerm?.message}</p>
-      <Button type='submit' fullWidth variant='contained' color='primary'>
+      <Button type="submit" fullWidth variant="contained" color="primary">
         Register
       </Button>
     </form>

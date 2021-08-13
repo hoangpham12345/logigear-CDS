@@ -4,7 +4,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 
 import { Link as RouterLink, useHistory } from "react-router-dom";
-
 import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -12,6 +11,8 @@ import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import * as AxiosService from "../utils/services/AxiosService";
+
+
 const useStyles = makeStyles({
   signupForm: {
     marginTop: "20px",
@@ -61,17 +62,17 @@ const LoginForm = ({ handleOpen }) => {
     };
     console.log(data);
     AxiosService.Login(modifiedData)
-      // .then(history.push(''))
       .then(() => {
-        alert("Sign in success");
-        history.push("/home");
+        setTimeout(() => {
+          history.push("/home");
+        }, 300);
       })
-      .catch((error) => alert("Login fail !!!"));
+      .catch((error) => alert("Invalid Username or Password !!!"));
   };
   return (
     <form className={classes.LoginForm} onSubmit={handleSubmit(onSubmit)}>
       <div className={classes.divField}>
-        <label className={classes.labelText}>Username</label>
+        <label className={classes.labelText}>Username*</label>
         <input
           placeholder="Username"
           className={classes.inputText}
@@ -80,7 +81,7 @@ const LoginForm = ({ handleOpen }) => {
         <p className={classes.errorText}>{errors.username?.message}</p>
       </div>
       <div className={classes.divField}>
-        <label className={classes.labelText}>Password</label>
+        <label className={classes.labelText}>Password*</label>
         <input
           type="password"
           placeholder="Password"
@@ -89,6 +90,18 @@ const LoginForm = ({ handleOpen }) => {
         />
         <p className={classes.errorText}>{errors.password?.message}</p>
       </div>
+      <FormControlLabel
+        control={
+          <Controller
+            name="remember"
+            control={control}
+            defaultValue={false}
+            render={({ field }) => <Checkbox {...field} color="primary" />}
+          />
+        }
+        label={<span>Remember me</span>}
+      />
+      <p></p>
       <Button type="submit" fullWidth variant="contained" color="primary">
         Login
       </Button>

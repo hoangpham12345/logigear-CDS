@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
 	public void addNewUser(User user) {
 
 		try {
-			Role defaultRole = roleService.getRoleById(2L);
+			Role defaultRole = roleService.getRoleByName("employee");
 			user.getRoles().add(defaultRole);
 			userRepository.save(user);
 		} catch (Exception e) {
@@ -51,34 +51,23 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void updateUser(User user, Long id) {
 		Optional<User> userOptional = userRepository.findById(id);
-
+		User updatedUser = userOptional.get();
 		if (!userOptional.isPresent()) {
 			throw new ResourceNotFoundException("user not found with id = " + id);
 		}
 
 		try {
-			NullUserUpdateCheck(user);
-			User updatedUser = userOptional.get();
-			updatedUser.setEmail(user.getEmail());
-			updatedUser.setUsername(user.getUsername());
+			if (!user.getUsername().isEmpty()) {
+				updatedUser.setUsername(user.getUsername());
+			}
+			if (!user.getEmail().isEmpty())
+				updatedUser.setEmail(user.getEmail());
+
 			userRepository.save(updatedUser);
-		} catch (EntityNotFoundException e) {
-			throw new WrongBodyException("username or email are not nullable");
 		} catch (Exception e) {
 			throw new WrongBodyException("wrong body");
 		}
-
 	}
-
-	private void NullUserUpdateCheck(User user) {
-		if (user.getEmail().length() == 0) {
-			throw new EntityNotFoundException();
-		} else if (user.getUsername().length() == 0) {
-			throw new EntityNotFoundException();
-		}
-	}
-	
-
 
 	@Override
 	public User getUserById(Long id) {
@@ -105,6 +94,14 @@ public class UserServiceImpl implements UserService {
 			throw new ResourceNotFoundException("user not found with id = " + id);
 		}
 		userRepository.deleteById(id);
+	}
+
+	@Override
+	public User getUserWithNameAndPass(String username, String password) {
+		// TODO Auto-generated method stub
+		User user = userRepository.findByUsername(username);
+		user = userRepository.findByUsernameAndPassword(username, user.getPassword());
+		return user;
 	}
 
 }
