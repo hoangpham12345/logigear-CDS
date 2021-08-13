@@ -44,7 +44,7 @@ const schema = Yup.object().shape({
 
 const ProfileForm = () => {
   const classes = useStyles();
-  const uid = 3; // This is for testing, will be changed to the real userid
+  const uid = localStorage.getItem("id"); // This is for testing, will be changed to the real userid
 
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
@@ -61,7 +61,9 @@ const ProfileForm = () => {
   const onSubmit = (data) => {
     setIsSubmitting(true);
     console.log(data);
-    AxiosService.updateProfile(uid, data);
+    AxiosService.updateProfile(uid, data)
+      .then(alert("Update successfully"))
+      .catch((error) => console.log(error));
     setIsSubmitting(false);
   };
 

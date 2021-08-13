@@ -9,13 +9,12 @@ export function runLogoutTimer(timer) {
 export function authenticated() {
   const authenticated = false;
   const token = localStorage.getItem("token");
-  runLogoutTimer(10000);
-    if (token) {
-      const authenticated = true;
-      console.log(authenticated)
-      return authenticated;
-    } 
-    console.log(authenticated)
+  runLogoutTimer(3600000);
+  if (token) {
+    const authenticated = true;
+    console.log(authenticated);
     return authenticated;
+  }
+  console.log(authenticated);
+  return authenticated;
 }
-

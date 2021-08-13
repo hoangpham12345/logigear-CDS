@@ -11,7 +11,6 @@ import {
 } from "react-router-dom";
 import Header from "./components/Header";
 import Signup from "./pages/Signup";
-import EmployeeList from "./pages/EmployeeList";
 import LoginNew from "./pages/LoginNew";
 import * as AuthService from "./utils/services/AuthService";
 import EmployeeList from "./pages/EmployeeList";
@@ -39,7 +38,9 @@ const App = () => {
           <Route
             exact
             path='/profile'
-            render={() => (authenticated ? <Profile /> : <Redirect to='/' />)}
+            render={() =>
+              AuthService.authenticated ? <Profile /> : <Redirect to='/' />
+            }
           />
           <Route exact path='/header' component={Header} />
           {/* <Route exact path='/taskbar' component={TaskBar} /> */}
