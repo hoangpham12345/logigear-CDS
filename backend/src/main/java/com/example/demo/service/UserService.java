@@ -3,7 +3,9 @@ package com.example.demo.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.demo.model.UpdateDetails;
 import com.example.demo.model.User;
+import com.example.demo.model.UserDetails;
 
 import org.springframework.data.jpa.repository.Modifying;
 
@@ -12,7 +14,7 @@ public interface UserService {
 
     public void addNewUser(User user);
 
-	public void updateUser(User user, Long id);
+	public void updateUser(UpdateDetails details, Long id);
 
 	public User getUserById(Long id);
 

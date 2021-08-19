@@ -12,6 +12,7 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.sun.istack.Nullable;
 
 @Entity(name = "User")
 @Table(name = "users", uniqueConstraints = { @UniqueConstraint(name = "email_unique", columnNames = "email"), @UniqueConstraint(name = "username_unique", columnNames = "username")})
@@ -28,7 +29,6 @@ public class User {
     private String username;
 
     @Column(length = 75, nullable = false)
-    // @Size(min = 8, max = 20)
     @JsonView(Views.Internal.class)
     private String password;
 
@@ -47,13 +47,28 @@ public class User {
     @JsonView(Views.External.class)
     private Set<Role> roles = new HashSet<>();
     
+    
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    @JsonView(Views.External.class)
+    private UserDetails userDetails;
+    
     public User() {
     }
-    public User(String username, String password){
+    
+    public UserDetails getUserDetails() {
+		return userDetails;
+	}
+	public void setUserDetails(UserDetails userDetails) {
+		this.userDetails = userDetails;
+	}
+	
+	public User(String username, String password){
         this.username = username;
         this.password = password;
     }
-    public User(Long id, String username, String email) {
+    
+	public User(Long id, String username, String email) {
         this.id = id;
         this.username = username;
         this.email = email;

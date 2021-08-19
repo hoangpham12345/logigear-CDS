@@ -10,6 +10,7 @@ import javax.persistence.EntityNotFoundException;
 import com.example.demo.Exception.ResourceNotFoundException;
 import com.example.demo.Exception.WrongBodyException;
 import com.example.demo.model.Role;
+import com.example.demo.model.UserDetails;
 import com.example.demo.model.User;
 import com.example.demo.model.Views;
 import com.example.demo.repository.UserRepository;
@@ -17,6 +18,7 @@ import com.example.demo.service.RoleService;
 import com.example.demo.service.UserService;
 import com.example.demo.model.AuthRequest;
 import com.example.demo.model.AuthResponse;
+import com.example.demo.model.UpdateDetails;
 import com.example.demo.util.JwtUtil;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -92,21 +94,20 @@ public class UserController {
 		return userService.getUsersWithUsernameLike(username);
 	}
 
-	@PostMapping("/users")
-	public ResponseEntity<Object> addNewUsers(@RequestBody User user) {
-		//Special cases must use try catch
-		
-		userService.addNewUser(user);
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId())
-				.toUri();
-		return ResponseEntity.accepted().build();
-		
-	}
+//	@PostMapping("/users")
+//	public ResponseEntity<Object> addNewUsers(@RequestBody User user) {
+//		//Special cases must use try catch
+//		
+//		userService.addNewUser(user);
+//		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId())
+//				.toUri();
+//		return ResponseEntity.accepted().build();
+//		
+//	}
 	
 	@PutMapping("/users/{id}")
-	public ResponseEntity<Object> updateUser(@RequestBody User user, @PathVariable("id") Long id) {
-		//Special cases must use try catch
-		userService.updateUser(user, id);
+	public ResponseEntity<Object> updateUser(@RequestBody UpdateDetails details, @PathVariable("id") Long id) {
+		userService.updateUser(details, id);
 		return ResponseEntity.accepted().build();
 		
 	}
@@ -175,7 +176,8 @@ public class UserController {
         try{
             userService.addNewUser(user);
         }catch(Exception e){
-            return new ResponseEntity<>(new Exception("Couldn't save to database"),HttpStatus.FORBIDDEN);
+        	e.printStackTrace();
+        	return new ResponseEntity<>(new Exception("Couldn't save to database"),HttpStatus.FORBIDDEN);
         }
             ObjectNode objectNode = mapper.createObjectNode();
             objectNode.put("status", true);
