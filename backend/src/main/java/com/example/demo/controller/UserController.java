@@ -144,7 +144,6 @@ public class UserController {
             return new ResponseEntity<>("Incorrect username or password"
                     , HttpStatus.FORBIDDEN);
         }
-		String password = user.getPassword();
 		try {
 			user = userService.getUserWithNameAndPass(user.getUsername(), user.getPassword());
 		}catch(Exception e){
@@ -153,7 +152,7 @@ public class UserController {
 		}
         final String jwt = jwtUtil.generateToken(user.getUsername());
 
-        return new ResponseEntity<>(new AuthResponse(user.getId(), user.getUsername(), jwt), HttpStatus.OK);
+        return new ResponseEntity<>(new AuthResponse(user, jwt), HttpStatus.OK);
     }
 
 	@PostMapping("/auth/signup")

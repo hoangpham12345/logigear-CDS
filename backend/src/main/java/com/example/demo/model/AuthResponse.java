@@ -1,15 +1,19 @@
 package com.example.demo.model;
 
+import java.util.HashSet;
+import java.util.Set;
 
 public class AuthResponse {
     private final long id;
     private final String name;
+    private Set<Role> roles = new HashSet<>();
     private final String token;
     
-    public AuthResponse(long id, String name, String token) {
-        this.id = id;
-        this.name = name;
+    public AuthResponse(User user, String token) {
+        this.id = user.getId();
+        this.name = user.getUsername();
         this.token = token;
+        this.roles = user.getRoles();
     }
 
 
@@ -23,5 +27,9 @@ public class AuthResponse {
 
     public String getToken() {
         return token;
+    }
+
+    public Set<Role> getRoles(){
+        return roles;
     }
 }
