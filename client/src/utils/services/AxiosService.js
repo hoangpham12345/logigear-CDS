@@ -9,11 +9,15 @@ export const Login = (modifiedData) => {
   return axios
     .post("http://localhost:8080/auth/login", modifiedData)
     .then((res) => {
-      console.log(res.modifiedData);
+      let roles = [];
+      res.data.roles.forEach((role) => roles.push(role.name));
+      console.log(roles);
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("id", res.data.id);
       localStorage.setItem("username", res.data.name);
-    });
+      localStorage.setItem("roles", JSON.stringify(roles));
+    })
+    .catch((error) => console.log(error));
 };
 
 var axiosAuth = axios.create({

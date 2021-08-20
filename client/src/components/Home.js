@@ -16,7 +16,7 @@ import Grid from "@material-ui/core/Grid";
 // import { Route, Router } from 'react-router';
 // import TaskBar from './TaskBar'
 import Button from "@material-ui/core/Button";
-import * as AxiosService from "../utils/services/AxiosService";
+// import * as AxiosService from "../utils/services/AxiosService";
 //import { MenuItem } from "@material-ui/core";
 
 const styles = {
@@ -34,9 +34,18 @@ const styles = {
 
 class Home extends React.Component {
   state = {
+    roles: null,
     auth: true,
     anchorEl: null,
   };
+
+  componentDidMount() {
+    let roles = JSON.parse(localStorage.getItem("roles"));
+    let user = localStorage.getItem("username");
+    this.setState({ ...this.state, roles: roles, user: user }, () =>
+      console.log(this.state)
+    );
+  }
 
   handleChange = (event) => {
     this.setState({ auth: event.target.checked });
@@ -50,20 +59,10 @@ class Home extends React.Component {
     this.setState({ anchorEl: null });
   };
 
-  constructor(props) {
-    super(props);
-  }
-
   handleLogout = () => {
     this.setState({ anchorEl: null });
     localStorage.clear();
   };
-
-  componentDidMount() {
-    this.setState({
-      user: localStorage.getItem("username"),
-    });
-  }
 
   LoginCheckStatus() {
     if (this.state.user) {
@@ -96,30 +95,30 @@ class Home extends React.Component {
 
     return (
       <div className={classes.root}>
-        <AppBar position="static">
+        <AppBar position='static'>
           <Toolbar>
             <IconButton
               className={classes.menuButton}
-              color="inherit"
-              aria-label="Menu"
+              color='inherit'
+              aria-label='Menu'
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" color="inherit" className={classes.grow}>
+            <Typography variant='h6' color='inherit' className={classes.grow}>
               Home Page
             </Typography>
             {auth && (
               <div>
                 <IconButton
                   aria-owns={open ? "menu-appbar" : undefined}
-                  aria-haspopup="true"
+                  aria-haspopup='true'
                   onClick={this.handleMenu}
-                  color="inherit"
+                  color='inherit'
                 >
                   <AccountCircle />
                 </IconButton>
                 <Menu
-                  id="menu-appbar"
+                  id='menu-appbar'
                   anchorEl={anchorEl}
                   anchorOrigin={{
                     vertical: "top",
@@ -135,23 +134,30 @@ class Home extends React.Component {
                   <MenuItem>
                     <Button
                       href={this.loginCheckHref()}
-                      color="inherit"
+                      color='inherit'
                       onClick={this.handleLogout}
                     >
                       {this.LoginCheckButton()}
                     </Button>
                   </MenuItem>
                   <MenuItem>
-                    <Button href="/employees" color="inherit">
-                      Employees List
+                    <Button href='/profile' color='inherit'>
+                      Profile
                     </Button>
                   </MenuItem>
+                  {this.state.roles?.includes("manager") && (
+                    <MenuItem>
+                      <Button href='/employees' color='inherit'>
+                        Employees List
+                      </Button>
+                    </MenuItem>
+                  )}
                 </Menu>
               </div>
             )}
           </Toolbar>
         </AppBar>
-        <Grid item xs={12} md={12} className="App" style={{ fontSize: "50px" }}>
+        <Grid item xs={12} md={12} className='App' style={{ fontSize: "50px" }}>
           {this.LoginCheckStatus()}
         </Grid>
       </div>

@@ -39,7 +39,7 @@ function Header(props) {
           boxShadow: "0 3px 5px 2px rgba(237, 228, 231, .5)",
         }}
       >
-        <img src='img/mowede.png' style={{ height: "60px" }} />
+        <img src='img/mowede.png' style={{ height: "60px" }} alt='header' />
       </Grid>
     </Grid>
   );

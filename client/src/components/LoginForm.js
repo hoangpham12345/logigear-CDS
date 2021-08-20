@@ -3,15 +3,13 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 
-import { Link as RouterLink, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Link from "@material-ui/core/Link";
+// import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
-import axios from "axios";
 import * as AxiosService from "../utils/services/AxiosService";
-
 
 const useStyles = makeStyles({
   signupForm: {
@@ -74,7 +72,7 @@ const LoginForm = ({ handleOpen }) => {
       <div className={classes.divField}>
         <label className={classes.labelText}>Username*</label>
         <input
-          placeholder="Username"
+          placeholder='Username'
           className={classes.inputText}
           {...register("username")}
         />
@@ -83,8 +81,8 @@ const LoginForm = ({ handleOpen }) => {
       <div className={classes.divField}>
         <label className={classes.labelText}>Password*</label>
         <input
-          type="password"
-          placeholder="Password"
+          type='password'
+          placeholder='Password'
           className={classes.inputText}
           {...register("password")}
         />
@@ -93,16 +91,16 @@ const LoginForm = ({ handleOpen }) => {
       <FormControlLabel
         control={
           <Controller
-            name="remember"
+            name='remember'
             control={control}
             defaultValue={false}
-            render={({ field }) => <Checkbox {...field} color="primary" />}
+            render={({ field }) => <Checkbox {...field} color='primary' />}
           />
         }
         label={<span>Remember me</span>}
       />
       <p></p>
-      <Button type="submit" fullWidth variant="contained" color="primary">
+      <Button type='submit' fullWidth variant='contained' color='primary'>
         Login
       </Button>
     </form>

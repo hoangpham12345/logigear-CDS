@@ -7,6 +7,8 @@ import * as Yup from "yup";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 
+import dayjs from "dayjs";
+
 import * as AxiosService from "../utils/services/AxiosService";
 
 const useStyles = makeStyles({
@@ -38,13 +40,24 @@ const useStyles = makeStyles({
 });
 
 const schema = Yup.object().shape({
-  username: Yup.string().required(),
+  fullname: Yup.string().required(),
   email: Yup.string().email().max(50).required(),
+  address: Yup.string().required(),
+  phone: Yup.string()
+    .required()
+    .test("len", "Must be exactly 10 characters", (val) => val.length === 10),
+  birthday: Yup.date()
+    .max(
+      // new Date(Date.now() - 18 * 365 * 24 * 3600 * 1000),
+      dayjs().set("year", dayjs().get("year") - 18),
+      "You must be older than 18 years old to work at the company."
+    )
+    .required(),
 });
 
 const ProfileForm = () => {
   const classes = useStyles();
-  const uid = localStorage.getItem("id"); // This is for testing, will be changed to the real userid
+  const uid = localStorage.getItem("id");
 
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
@@ -55,37 +68,64 @@ const ProfileForm = () => {
     reset,
   } = useForm({
     resolver: yupResolver(schema),
-    defaultValues: { username: "", email: "" },
+    defaultValues: {
+      fullname: "",
+      email: "",
+      address: "",
+      phone: "",
+      birthday: null,
+    },
   });
 
   const onSubmit = (data) => {
     setIsSubmitting(true);
-    console.log(data);
-    AxiosService.updateProfile(uid, data)
-      .then(alert("Update successfully"))
+    const modifiedData = {
+      // email: data.email,
+      // userDetails: {
+      //   fullname: data.fullname,
+      //   address: data.address,
+      //   phone: data.phone,
+      //   birthday: dayjs(data.birthday)
+      //     // .set("date", dayjs(data.birthday).get("date") + 1)
+      //     .format("YYYY-MM-DD"),
+      // },
+      ...data,
+      birthday: dayjs(data.birthday).format("YYYY-MM-DD"),
+    };
+    console.log(JSON.stringify(modifiedData));
+    AxiosService.updateProfile(uid, modifiedData)
+      .then((response) => alert("Update successfully"))
       .catch((error) => console.log(error));
     setIsSubmitting(false);
   };
 
   React.useEffect(() => {
     AxiosService.getProfie(uid)
-      .then((response) => {
-        console.log(response.data);
-        reset(response.data);
+      .then((response) => response.data)
+      .then((data) => {
+        const modifiedData = {
+          fullname: data.userDetails.fullname,
+          email: data.email,
+          address: data.userDetails.address,
+          phone: data.userDetails.phone,
+          birthday: dayjs(data.userDetails.birthday).format("YYYY-MM-DD"),
+        };
+        reset(modifiedData);
+        console.log(modifiedData);
       })
       .catch((error) => console.log(error));
-  }, [reset]);
+  }, [reset, uid]);
 
   return (
     <form className={classes.profileForm} onSubmit={handleSubmit(onSubmit)}>
       <div className={classes.divField}>
-        <label className={classes.labelText}>Username*</label>
+        <label className={classes.labelText}>Fullname*</label>
         <input
-          placeholder='Username'
+          placeholder='Fullname'
           className={classes.inputText}
-          {...register("username")}
+          {...register("fullname")}
         />
-        <p className={classes.errorText}>{errors.username?.message}</p>
+        <p className={classes.errorText}>{errors.fullname?.message}</p>
       </div>
       <div className={classes.divField}>
         <label className={classes.labelText}>Email*</label>
@@ -95,6 +135,34 @@ const ProfileForm = () => {
           {...register("email")}
         />
         <p className={classes.errorText}>{errors.email?.message}</p>
+      </div>
+      <div className={classes.divField}>
+        <label className={classes.labelText}>Address*</label>
+        <input
+          placeholder='Address'
+          className={classes.inputText}
+          {...register("address")}
+        />
+        <p className={classes.errorText}>{errors.address?.message}</p>
+      </div>
+      <div className={classes.divField}>
+        <label className={classes.labelText}>Phone*</label>
+        <input
+          placeholder='Phone'
+          className={classes.inputText}
+          {...register("phone")}
+        />
+        <p className={classes.errorText}>{errors.phone?.message}</p>
+      </div>
+      <div className={classes.divField}>
+        <label className={classes.labelText}>Birthday*</label>
+        <input
+          type='date'
+          placeholder='Birthday'
+          className={classes.inputText}
+          {...register("birthday")}
+        />
+        <p className={classes.errorText}>{errors.birthday?.message}</p>
       </div>
       <Button
         type='submit'

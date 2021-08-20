@@ -24,10 +24,32 @@ const App = () => {
       <Router>
         <Header />
         <Switch>
-          <Route exact path='/' component={Welcome} />
-          <Route exact path='/login' component={LoginNew} />
-          <Route exact path='/signup' component={Signup} />
-          <Route exact path='/home' component={Home} />
+          <Route
+            exact
+            path='/'
+            render={() => (AuthService.authenticated ? <Home /> : <Welcome />)}
+          />
+          <Route
+            exact
+            path='/login'
+            render={() =>
+              AuthService.authenticated ? <LoginNew /> : <Redirect to='/' />
+            }
+          />
+          <Route
+            exact
+            path='/signup'
+            render={() =>
+              AuthService.authenticated ? <Signup /> : <Redirect to='/' />
+            }
+          />
+          <Route
+            exact
+            path='/home'
+            render={() =>
+              AuthService.authenticated ? <Home /> : <Redirect to='/' />
+            }
+          />
           <Route
             exact
             path='/employees'
